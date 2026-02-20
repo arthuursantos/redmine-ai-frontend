@@ -1,7 +1,8 @@
-import ReactMarkdown from 'react-markdown';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Bot, User } from 'lucide-react';
 import clsx from 'clsx';
 import type { Message } from '../hooks/useChat';
+import ReactMarkdown, { type Components } from 'react-markdown';
 
 interface ChatMessageProps {
     msg: Message;
@@ -9,28 +10,50 @@ interface ChatMessageProps {
 }
 
 export default function ChatMessage({ msg, isDark }: ChatMessageProps) {
-    const isUser = msg.role === 'user';
+    const isAi = msg.role === 'ai';
+
+    const markdownComponents: Components = {
+        h2: ({ node, ...props }) => (
+            <h2 className={clsx("text-base font-bold mt-4 mb-2 border-b pb-1",
+                isAi ? (isDark ? "border-gray-700 text-blue-400" : "border-gray-200 text-blue-700") : "text-white border-white/20"
+            )} {...props} />
+        ),
+        h3: ({ node, ...props }) => (
+            <h3 className="text-sm font-bold mt-3 mb-1 opacity-90" {...props} />
+        ),
+        strong: ({ node, ...props }) => (
+            <span className="font-bold opacity-100" {...props} />
+        ),
+        ul: ({ node, ...props }) => (
+            <ul className="list-disc pl-5 mb-2 space-y-1" {...props} />
+        ),
+        li: ({ node, ...props }) => (
+            <li className="marker:opacity-70" {...props} />
+        ),
+        p: ({ node, ...props }) => (
+            <p className="mb-2 last:mb-0 leading-relaxed" {...props} />
+        )
+    };
 
     return (
-        <div className={clsx("flex gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300", isUser ? "flex-row-reverse" : "")}>
-            <div className={clsx(
-                "w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm transition-colors border",
-                isUser
-                    ? (isDark ? "bg-white border-2 border-black text-black" : "bg-brand-primary border-brand-primary text-white")
-                    : (isDark ? "bg-dark-panel border-brand-primary/30 text-brand-primary" : "bg-brand-primary/10 border-brand-primary/20 text-brand-primary")
+        <div className={clsx("flex gap-4 fade-in", isAi ? "flex-row" : "flex-row-reverse")}>
+            <div className={clsx("w-8 h-8 rounded-full flex items-center justify-center shrink-0 border",
+                isAi
+                    ? (isDark ? "bg-brand-primary/20 border-brand-primary text-brand-primary" : "bg-blue-100 border-blue-200 text-blue-600")
+                    : (isDark ? "bg-gray-700 border-gray-600 text-gray-300" : "bg-gray-100 border-gray-200 text-gray-500")
             )}>
-                {isUser ? <User size={18} strokeWidth={2.5} /> : <Bot size={20} />}
+                {isAi ? <Bot size={18} /> : <User size={18} />}
             </div>
-            <div className={clsx("py-3 px-6 text-[15px] leading-7 shadow-sm rounded-[24px]",
-                isUser
-                    ? (isDark ? "bg-brand-primary text-white rounded-tr-sm" : "bg-brand-primary text-white rounded-tr-sm")
-                    : (isDark ? "bg-dark-panel border border-brand-primary/20 text-gray-200 rounded-tl-sm" : "bg-white border border-border-light text-text-main rounded-tl-sm")
+            <div className={clsx("p-4 rounded-2xl max-w-[85%] shadow-sm text-sm border",
+                isAi
+                    ? (isDark ? "bg-dark-panel border-gray-700 text-gray-100" : "bg-white border-gray-100 text-gray-800")
+                    : (isDark ? "bg-brand-primary/20 border-brand-primary/30 text-white" : "bg-blue-600 border-blue-600 text-white")
             )}>
-                {msg.role === 'ai' && !msg.isChart ? (
-                    <div className="prose prose-invert max-w-none text-inherit">
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
-                    </div>
-                ) : msg.content}
+
+                <ReactMarkdown components={markdownComponents}>
+                    {msg.content}
+                </ReactMarkdown>
+
             </div>
         </div>
     );
