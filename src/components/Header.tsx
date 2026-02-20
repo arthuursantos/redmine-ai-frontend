@@ -15,7 +15,7 @@ export default function Header({ isDark, toggleTheme }: HeaderProps) {
                 <div className="bg-brand-primary p-2 rounded-xl text-white shadow-lg shadow-brand-primary/20">
                     <Sparkles size={18} />
                 </div>
-                <span className="font-semibold text-xl tracking-tight">Redmine AI</span>
+                <span className="font-semibold text-xl tracking-tight">Hermes</span>
             </div>
 
             <button
