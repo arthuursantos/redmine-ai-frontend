@@ -9,6 +9,13 @@ export type Message = {
     isChart?: boolean;
 };
 
+interface promptResponse {
+    data: {
+        message: string,
+        chartConfig: object
+    }
+}
+
 interface ChartSeriesGeneric {
     type?: string;
     radius?: string | string[];
@@ -40,7 +47,6 @@ export const useChat = () => {
 
     const sendMessage = useCallback(async (
         userText: string,
-        isChartMode: boolean,
         isDark: boolean,
         projectId: string = "",
         categoryId: string = ""
@@ -51,7 +57,7 @@ export const useChat = () => {
         setMessages((prev) => [...prev, { id: Date.now().toString(), role: 'user', content: userText }]);
 
         try {
-            const endpoint = isChartMode ? 'http://localhost:8080/api/prompt/chart' : 'http://localhost:8080/api/prompt/chat';
+            const endpoint = 'http://localhost:8080/api/prompt/chat';
 
             const payload = {
                 prompt: userText,
@@ -59,11 +65,10 @@ export const useChat = () => {
                 categoryId: categoryId
             };
 
-            const response = await axios.post(endpoint, payload);
+            const { data: { message, chartConfig} }: promptResponse = await axios.post(endpoint, payload);
 
-            if (isChartMode) {
-                const { message, chartConfig: rawConfig } = response.data;
-                const config = { ...rawConfig } as EChartsOption;
+            if (chartConfig) {
+                const config = { ...chartConfig } as EChartsOption;
 
                 const textColor = isDark ? '#e5e7eb' : '#374151';
 
@@ -108,7 +113,7 @@ export const useChat = () => {
                 setMessages((prev) => [...prev, {
                     id: Date.now().toString(),
                     role: 'ai',
-                    content: typeof response.data === 'string' ? response.data : JSON.stringify(response.data)
+                    content: message
                 }]);
             }
         } catch (err) {

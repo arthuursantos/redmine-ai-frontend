@@ -138,6 +138,6 @@ const IconButton = ({ onClick, icon, isDark }: IconButtonProps) => (
 const EmptyState = ({ isDark }: { isDark: boolean }) => (
     <div className="flex flex-col items-center justify-center opacity-50">
         <BarChart2 size={48} className={isDark ? "text-brand-primary" : "text-gray-300"} />
-        <h3 className="text-2xl font-medium mt-4">Analytics Dashboard</h3>
+        <h3 className="text-2xl font-medium mt-4">VILT Group</h3>
     </div>
 );

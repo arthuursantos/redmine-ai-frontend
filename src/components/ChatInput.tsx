@@ -1,4 +1,4 @@
-import { Send, BarChart2, MessageSquare } from 'lucide-react';
+import { Send } from 'lucide-react';
 import clsx from 'clsx';
 
 interface ChatInputProps {
@@ -12,8 +12,7 @@ interface ChatInputProps {
 }
 
 export default function ChatInput({
-                                      inputValue, setInputValue, handleSend,
-                                      isChartMode, setIsChartMode, isDark, isLoading
+                                      inputValue, setInputValue, handleSend, isDark, isLoading
                                   }: ChatInputProps) {
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -32,7 +31,7 @@ export default function ChatInput({
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={isChartMode ? "Ex: Gráfico de pizza por prioridade..." : "Digite sua mensagem..."}
+                    placeholder={"Digite sua mensagem..."}
                     className={clsx("w-full p-5 resize-none outline-none bg-transparent text-[15px]",
                         isDark ? "text-gray-200 placeholder:text-gray-400" : "text-text-main placeholder:text-gray-400"
                     )}
@@ -41,18 +40,6 @@ export default function ChatInput({
                 />
 
                 <div className="flex justify-between items-center px-4 pb-4">
-                    <button
-                        onClick={() => setIsChartMode(!isChartMode)}
-                        className={clsx("flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full transition-colors",
-                            isChartMode
-                                ? "bg-brand-primary text-white shadow-md shadow-brand-primary/20"
-                                : (isDark ? "bg-dark-panel text-gray-400 hover:bg-blue-panel" : "bg-gray-100 text-gray-500 hover:bg-gray-200")
-                        )}
-                    >
-                        {isChartMode ? <BarChart2 size={16} /> : <MessageSquare size={16} />}
-                        <span>{isChartMode ? "Gerar Gráfico" : "Conversar"}</span>
-                    </button>
-
                     <button
                         onClick={handleSend}
                         disabled={!inputValue.trim() || isLoading}
