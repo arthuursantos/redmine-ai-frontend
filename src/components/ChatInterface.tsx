@@ -29,7 +29,7 @@ export default function ChatInterface() {
         const currentInput = inputValue;
         setInputValue('');
 
-        await sendMessage(currentInput, isChartMode, isDark, selectedProjectId, selectedCategoryId);
+        await sendMessage(currentInput, isDark, selectedProjectId, selectedCategoryId);
     };
 
     const lastAiMessage = messages.filter(m => m.role === 'ai').pop()?.content || '';
